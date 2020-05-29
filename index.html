@@ -222,6 +222,7 @@
                     .append("circle")
                     .classed("dot", true)
                     .attr("r", 1)
+                    .attr("filter", 1)
                     .styles({
                       'fill': '#FFFF00',
                       'fill-opacity': 0.5,
@@ -244,7 +245,10 @@
             .transition()
             .delay(renderDelay)
             .duration(750)
-            .attr("r", 6)
+            .attr("r", function(d, i){
+              const filter = d3.select(this).attr('filter');
+              return (filter == 1) ? 6 : 0;
+            })
 
       }
 
@@ -334,10 +338,12 @@
     const filterCircles = (distArr, dateArr) => {
       const circles = d3.selectAll('circle');
       circles.filter(filtFunc(distArr, dateArr, true))
+            .attr("filter", 0)
             .transition()
             .attr('r', 0);
 
       circles.filter(filtFunc(distArr, dateArr, false))
+            .attr("filter", 1)
             .transition()
             .attr('r', 6);
     }
